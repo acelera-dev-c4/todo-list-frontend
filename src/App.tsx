@@ -1,10 +1,8 @@
-import React from "react";
-
 import "./styles/tailwind.css";
 import Routes from "./routes";
 
 function App() {
-  return <Routes />;
+  return <Routes />; 
 }
 
 export default App;
