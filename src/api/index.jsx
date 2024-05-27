@@ -1,6 +1,10 @@
 import axios from "axios";
 
-export const baseURL = "https://aceleradev.sharebook.com.br"
+import envJson from '../env.json';
+
+export const baseURL = (window.location.hostname === 'localhost')
+  ? (envJson.development.base_path)
+  : (envJson.production.base_path)
 
 const api = async (method, rota, data) => {
   const headers = {
