@@ -1,11 +1,14 @@
 import { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
+
 import Button from "../../components/Button";
-import axios from "axios";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const { login } = useAuth();
 
   const handleButtonClick = async () => {
     try {
@@ -15,23 +18,14 @@ export default function Login() {
         email,
         password,
       };
+      await login(params);
 
-      const { data } = await axios.post(
-        "https://aceleradev.sharebook.com.br/Auth",
-        params,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        }
-      );
-
-      setLoading(false);
-
-      console.log("data", data);
     } catch (error) {
       console.log("error", error);
+    } finally {
+      setEmail("");
+      setPassword("");
+      setLoading(false);
     }
   };
 
