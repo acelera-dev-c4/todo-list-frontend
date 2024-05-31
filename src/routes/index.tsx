@@ -5,7 +5,8 @@ import {
 } from "react-router-dom";
 import {
   Login,
-  Home
+  Home,
+  PrivateRoute
 } from '../pages';
 
 export default function Routes() {
@@ -13,7 +14,9 @@ export default function Routes() {
     <BrowserRouter>
       <RoutesContainer>
         <Route path="/" element={<Login />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/home" element={<PrivateRoute />}>
+          <Route index element={<Home />} />
+        </Route>
       </RoutesContainer>
     </BrowserRouter>
   );

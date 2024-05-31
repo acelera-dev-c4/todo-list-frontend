@@ -1,11 +1,11 @@
 import { createContext, useState, useContext, ReactNode } from 'react';
 import api from '../api';
-import { saveTokenToLocalStorage, removeTokenToLocalStorage } from '../utils/localstorage';
+import { saveTokenToLocalStorage, removeTokenToLocalStorage } from '../helpers/localstorage';
 
 interface AuthContextType {
     isAuthenticated: boolean;
     login: (credentials: Credentials) => Promise<void>,
-    logout: () => Promise<void>;
+    logout: () => void;
 }
 
 interface AuthProviderProps {
@@ -25,27 +25,19 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const authProviderValue = {
         isAuthenticated,
         login: async (credentials: Credentials) => {
-            return new Promise<void>(async (resolve, reject) => {
-                try {
-                    const response = await api('post', '/Auth', credentials);
-                    const { token } = response.data.token;
-                    saveTokenToLocalStorage(token);
-                    setIsAuthenticated(true);
-                    window.location.href = '/home';
-                    resolve();
-                } catch (error) {
-                    reject(error);
-                }
-            });
-        },
-        logout: async () => {
             try {
-                removeTokenToLocalStorage();
-                setIsAuthenticated(false);
-                window.location.href = '/';
+                const response = await api('post', '/Auth', credentials);
+                const { token } = response.data.token;
+                saveTokenToLocalStorage(token);
+                setIsAuthenticated(true);
+                window.location.href = '/home';
             } catch (error) {
-                console.error("Error during logout:", error);
+                console.error("Error during login:", error);
             }
+        },
+        logout: () => {
+            removeTokenToLocalStorage();
+            setIsAuthenticated(false);
         },
     };
 
