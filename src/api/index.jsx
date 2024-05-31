@@ -36,7 +36,7 @@ const api = async (method, rota, data) => {
     }
     return response;
   } catch (error) {
-    console.log(error.response.data); // Mudar posteriormente para Toast
+    console.log(error.response.data); /* TODO: Mudar o "console.log" para um Toast */
     throw error;
   }
 };
