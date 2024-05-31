@@ -23,7 +23,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-    const [userData, setUserData] = useState(null);
+    const [userData, setUserData] = useState();
     const navigate = useNavigate();
 
     const authProviderValue = {
@@ -34,8 +34,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
                 const response = await api('post', '/Auth', credentials);
                 const { token } = response.data.token;
                 saveTokenToLocalStorage(token);
+                setUserData(response.data.userData);
                 setIsAuthenticated(true);
-                setUserData(response.data);
                 navigate('/home');
             } catch (error) {
                 console.error("Error during login:", error);
