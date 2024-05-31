@@ -36,6 +36,7 @@ function Todo() {
               <p className="text-sm text-gray-500">{task.description}</p>
             </div>
             <div className="flex items-center">
+              {/* TODO: Mudar nomes dos botões para ícones */}
               <button className="text-blue-500 mr-2">Edit</button>
               <button className="text-red-500">Delete</button>
             </div>
