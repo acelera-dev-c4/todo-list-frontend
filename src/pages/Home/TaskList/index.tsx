@@ -33,28 +33,41 @@ function Todo() {
   const { userData } = useAuth();
 
   useEffect(() => {
-    async function fetchData() {
-      if (userData.id) {
-        const { data: mainTasksData } = await api('get', `/MainTask/${userData.id}`);
-        setMainTasks(mainTasksData);
-        saveToLocalStorage('mainTasks', mainTasksData);
-
-        const subTasksDataPromises = mainTasksData.map(async (task: IMainTask) => {
-          const { data: subTasksData } = await api('get', `/SubTask/${task.id}`);
-          return {
-            mainTaskId: task.id,
-            subTasks: subTasksData
-          };
-        });
-
-        const subTasksData = await Promise.all(subTasksDataPromises);
-        setSubTasks(subTasksData);
-        saveToLocalStorage('subTasks', subTasksData);
+    async function fetchMainTasks() {
+      if (userData && userData.id) {
+        try {
+          const { data: mainTasksData } = await api('get', `/MainTask/${userData.id}`);
+          setMainTasks(mainTasksData);
+          saveToLocalStorage('mainTasks', mainTasksData);
+        } catch (error) {
+          console.error("Failed to fetch main tasks", error);
+        }
       }
     }
 
-    fetchData();
+    fetchMainTasks();
   }, [userData]);
+
+  useEffect(() => {
+    async function fetchSubTasks() {
+      if (mainTasks.length > 0) {
+        try {
+          const subTasksDataPromises = mainTasks.map(async (task: IMainTask) => {
+            const { data: subTasksData } = await api('get', `/SubTask/${task.id}`);
+            return { mainTaskId: task.id, subTasks: subTasksData };
+          });
+
+          const subTasksData = await Promise.all(subTasksDataPromises);
+          setSubTasks(subTasksData);
+          saveToLocalStorage('subTasks', subTasksData);
+        } catch (error) {
+          console.error("Failed to fetch sub tasks", error);
+        }
+      }
+    }
+
+    fetchSubTasks();
+  }, [mainTasks]);
 
   const handleSubTaskChange = (mainTaskId: number, subTaskId: number) => {
     setSubTasks(prevSubTasks =>
