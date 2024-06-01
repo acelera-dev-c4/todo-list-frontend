@@ -30,6 +30,8 @@ function Todo() {
     () => getFromLocalStorage('subTasks') || []
   );
 
+  const [newTaskDescription, setNewTaskDescription] = useState('');
+
   const { userData } = useAuth();
 
   useEffect(() => {
@@ -74,23 +76,56 @@ function Todo() {
       prevSubTasks.map(group =>
         group.mainTaskId === mainTaskId
           ? {
-              ...group,
-              subTasks: group.subTasks.map(subTask =>
-                subTask.id === subTaskId
-                  ? {
-                      ...subTask,
-                      finished: !subTask.finished
-                    }
-                  : subTask
-              ),
-            }
+            ...group,
+            subTasks: group.subTasks.map(subTask =>
+              subTask.id === subTaskId
+                ? {
+                  ...subTask,
+                  finished: !subTask.finished
+                }
+                : subTask
+            ),
+          }
           : group
       )
     );
   };
 
+  const handleCreateMainTask = async () => {
+    if (newTaskDescription.trim() !== '' && userData && userData.id) {
+      try {
+        const { data: newMainTask } = await api('post', '/MainTask', {
+          userId: userData.id,
+          description: newTaskDescription
+        });
+        setMainTasks([...mainTasks, newMainTask]);
+        saveToLocalStorage('mainTasks', [...mainTasks, newMainTask]);
+        setNewTaskDescription('');
+      } catch (error) {
+        console.error('Failed to create main task', error);
+      }
+    } else {
+      console.log('Invalid data');
+    }
+  };
+
   return (
     <div className="flex flex-col">
+      <div className="flex items-center mb-4">
+        <input
+          type="text"
+          value={newTaskDescription}
+          onChange={(e) => setNewTaskDescription(e.target.value)}
+          className="border rounded p-2 flex-grow mr-2"
+          placeholder="New task description"
+        />
+        <button
+          onClick={handleCreateMainTask}
+          className="bg-blue-500 text-white p-2 rounded"
+        >
+          Add Task
+        </button>
+      </div>
       {mainTasks.length > 0 ? (
         mainTasks.map((task: IMainTask) => (
           <div key={task.id} className="flex flex-col bg-white p-4 rounded-lg shadow-md mb-4">
