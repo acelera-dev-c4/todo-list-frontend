@@ -35,6 +35,8 @@ function Todo() {
   const [selectedMainTaskId, setSelectedMainTaskId] = useState<number | null>(null);
   const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
   const [editingTaskDescription, setEditingTaskDescription] = useState('');
+  const [editingSubTaskId, setEditingSubTaskId] = useState<number | null>(null);
+  const [editingSubTaskDescription, setEditingSubTaskDescription] = useState('');
 
   const { userData } = useAuth();
 
@@ -171,6 +173,39 @@ function Todo() {
     }
   };
 
+  const handleUpdateSubTask = async (mainTaskId: number, subTaskId: number) => {
+    const subTaskGroup = subTasks.find(group => group.mainTaskId === mainTaskId);
+    if (subTaskGroup) {
+      const subTask = subTaskGroup.subTasks.find(subTask => subTask.id === subTaskId);
+      if (subTask) {
+        try {
+          await api('put', `/SubTask/${subTaskId}`, {
+            description: editingSubTaskDescription || subTask.description,
+            finished: subTask.finished
+          });
+          const updatedSubTasks = subTasks.map(group =>
+            group.mainTaskId === mainTaskId
+              ? {
+                ...group,
+                subTasks: group.subTasks.map(st =>
+                  st.id === subTaskId
+                    ? { ...st, description: editingSubTaskDescription || st.description }
+                    : st
+                )
+              }
+              : group
+          );
+          setSubTasks(updatedSubTasks);
+          saveToLocalStorage('subTasks', updatedSubTasks);
+          setEditingSubTaskId(null);
+          setEditingSubTaskDescription('');
+        } catch (error) {
+          console.error('Failed to update sub task', error);
+        }
+      }
+    }
+  };
+
   const startEditingTask = (task: IMainTask) => {
     setEditingTaskId(task.id);
     setEditingTaskDescription(task.description);
@@ -179,6 +214,16 @@ function Todo() {
   const cancelEditing = () => {
     setEditingTaskId(null);
     setEditingTaskDescription('');
+  };
+
+  const startEditingSubTask = (subTask: ISubTask) => {
+    setEditingSubTaskId(subTask.id);
+    setEditingSubTaskDescription(subTask.description);
+  };
+
+  const cancelEditingSubTask = () => {
+    setEditingSubTaskId(null);
+    setEditingSubTaskDescription('');
   };
 
   return (
@@ -279,13 +324,47 @@ function Todo() {
               .map((subTask: ISubTask) => (
                 <div key={`${task.id}-${subTask.id}`} className="flex items-center justify-between mt-2">
                   <label>
-                    <p className="text-sm">{subTask.description}</p>
+                    {editingSubTaskId === subTask.id ? (
+                      <input
+                        type="text"
+                        value={editingSubTaskDescription}
+                        onChange={(e) => setEditingSubTaskDescription(e.target.value)}
+                        className="border rounded p-2 flex-grow mr-2"
+                        title="Editing SubTask Description"
+                        placeholder="Enter sub-task description"
+                      />
+                    ) : (
+                      <p className="text-sm">{subTask.description}</p>
+                    )}
                     <input
                       type="checkbox"
                       checked={subTask.finished}
                       onChange={() => handleSubTaskChange(task.id, subTask.id)}
                     />
                   </label>
+                  {editingSubTaskId === subTask.id ? (
+                    <>
+                      <button
+                        onClick={() => handleUpdateSubTask(task.id, subTask.id)}
+                        className="bg-green-500 text-white p-2 rounded mr-2"
+                      >
+                        Save
+                      </button>
+                      <button
+                        onClick={cancelEditingSubTask}
+                        className="bg-red-500 text-white p-2 rounded"
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={() => startEditingSubTask(subTask)}
+                      className="text-blue-500 mr-2"
+                    >
+                      Edit
+                    </button>
+                  )}
                 </div>
               ))}
           </div>
@@ -293,7 +372,6 @@ function Todo() {
       ) : (
         <p>No tasks found</p>
       )}
-
     </div>
   );
 }
