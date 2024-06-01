@@ -31,6 +31,8 @@ function Todo() {
   );
 
   const [newTaskDescription, setNewTaskDescription] = useState('');
+  const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
+  const [editingTaskDescription, setEditingTaskDescription] = useState('');
 
   const { userData } = useAuth();
 
@@ -109,6 +111,37 @@ function Todo() {
     }
   };
 
+  const handleUpdateMainTask = async () => {
+    if (editingTaskId !== null && editingTaskDescription.trim() !== '') {
+      try {
+        await api('put', `/MainTask/${editingTaskId}`, {
+          description: editingTaskDescription
+        });
+        const updatedMainTasks = mainTasks.map(task =>
+          task.id === editingTaskId ? { ...task, description: editingTaskDescription } : task
+        );
+        setMainTasks(updatedMainTasks);
+        saveToLocalStorage('mainTasks', updatedMainTasks);
+        setEditingTaskId(null);
+        setEditingTaskDescription('');
+      } catch (error) {
+        console.error('Failed to update main task', error);
+      }
+    } else {
+      console.log('Invalid data');
+    }
+  };
+
+  const startEditingTask = (task: IMainTask) => {
+    setEditingTaskId(task.id);
+    setEditingTaskDescription(task.description);
+  };
+
+  const cancelEditing = () => {
+    setEditingTaskId(null);
+    setEditingTaskDescription('');
+  };
+
   return (
     <div className="flex flex-col">
       <div className="flex items-center mb-4">
@@ -131,15 +164,48 @@ function Todo() {
           <div key={task.id} className="flex flex-col bg-white p-4 rounded-lg shadow-md mb-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-semibold">{task.description}</h3>
+                {editingTaskId === task.id ? (
+                  <input
+                    type="text"
+                    value={editingTaskDescription}
+                    onChange={(e) => setEditingTaskDescription(e.target.value)}
+                    className="border rounded p-2 flex-grow mr-2"
+                    title="Editing Task Description"
+                    placeholder="Enter task description"
+                  />
+                ) : (
+                  <h3 className="text-lg font-semibold">{task.description}</h3>
+                )}
               </div>
               <div className="flex items-center">
-                {/* TODO: Mudar nome dos botões para ícones */}
-                <button className="text-blue-500 mr-2">Edit</button>
-                <button className="text-red-500">Delete</button>
+                {editingTaskId === task.id ? (
+                  <>
+                    <button
+                      onClick={handleUpdateMainTask}
+                      className="bg-green-500 text-white p-2 rounded mr-2"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={cancelEditing}
+                      className="bg-red-500 text-white p-2 rounded"
+                    >
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => startEditingTask(task)}
+                      className="text-blue-500 mr-2"
+                    >
+                      Edit
+                    </button>
+                    <button className="text-red-500">Delete</button>
+                  </>
+                )}
               </div>
             </div>
-
             {subTasks
               .filter((subTaskGroup) => subTaskGroup.mainTaskId === task.id)
               .flatMap((subTaskGroup) => subTaskGroup.subTasks)
