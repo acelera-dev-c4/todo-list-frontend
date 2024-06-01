@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../../api';
+import { getFromLocalStorage, saveToLocalStorage } from '../../../helpers/localstorage';
 import { useAuth } from "../../../context/AuthContext";
 
 interface IMainTask {
@@ -21,8 +22,14 @@ interface ISubTaskGroup {
 }
 
 function Todo() {
-  const [mainTasks, setMainTasks] = useState<IMainTask[]>([]);
-  const [subTasks, setSubTasks] = useState<ISubTaskGroup[]>([]);
+  const [mainTasks, setMainTasks] = useState<IMainTask[]>(
+    () => getFromLocalStorage('mainTasks') || []
+  );
+
+  const [subTasks, setSubTasks] = useState<ISubTaskGroup[]>(
+    () => getFromLocalStorage('subTasks') || []
+  );
+
   const { userData } = useAuth();
 
   useEffect(() => {
@@ -30,6 +37,7 @@ function Todo() {
       if (userData.id) {
         const { data: mainTasksData } = await api('get', `/MainTask/${userData.id}`);
         setMainTasks(mainTasksData);
+        saveToLocalStorage('mainTasks', mainTasksData);
 
         const subTasksDataPromises = mainTasksData.map(async (task: IMainTask) => {
           const { data: subTasksData } = await api('get', `/SubTask/${task.id}`);
@@ -41,6 +49,7 @@ function Todo() {
 
         const subTasksData = await Promise.all(subTasksDataPromises);
         setSubTasks(subTasksData);
+        saveToLocalStorage('subTasks', subTasksData);
       }
     }
 
@@ -82,7 +91,7 @@ function Todo() {
                 <button className="text-red-500">Delete</button>
               </div>
             </div>
-            
+
             {subTasks
               .filter((subTaskGroup) => subTaskGroup.mainTaskId === task.id)
               .flatMap((subTaskGroup) => subTaskGroup.subTasks)
