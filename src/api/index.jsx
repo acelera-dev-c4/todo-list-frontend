@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getTokenFromLocalStorage } from '../helpers/localstorage';
+import { getFromLocalStorage } from '../helpers/localstorage';
 
 import envJson from '../env.json';
 
@@ -8,7 +8,7 @@ export const baseURL = (window.location.hostname === 'localhost')
   : (envJson.production.base_path)
 
 const api = async (method, rota, data) => {
-  const token = getTokenFromLocalStorage();
+  const token = getFromLocalStorage('authToken');
   const headers = {
     // withCredentials: true,
     "Content-Type": "application/json",

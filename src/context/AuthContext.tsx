@@ -1,7 +1,7 @@
 import { createContext, useState, useContext, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
-import { saveTokenToLocalStorage, removeTokenToLocalStorage } from '../helpers/localstorage';
+import { saveToLocalStorage, removeFromLocalStorage } from '../helpers/localstorage';
 
 interface AuthContextType {
     isAuthenticated: boolean;
@@ -33,7 +33,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
             try {
                 const response = await api('post', '/Auth', credentials);
                 const { token } = response.data.token;
-                saveTokenToLocalStorage(token);
+                saveToLocalStorage('authToken', token);
                 setUserData(response.data.userData);
                 setIsAuthenticated(true);
                 navigate('/home');
@@ -42,7 +42,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
             }
         },
         logout: () => {
-            removeTokenToLocalStorage();
+            removeFromLocalStorage('authToken');
             setIsAuthenticated(false);
         },
     };
