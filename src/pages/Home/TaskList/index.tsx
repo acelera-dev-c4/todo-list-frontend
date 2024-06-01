@@ -206,6 +206,24 @@ function Todo() {
     }
   };
 
+  const handleDeleteSubTask = async (mainTaskId: number, subTaskId: number) => {
+    try {
+      await api('delete', `/SubTask/${subTaskId}`);
+      const updatedSubTasks = subTasks.map(group =>
+        group.mainTaskId === mainTaskId
+          ? {
+            ...group,
+            subTasks: group.subTasks.filter(subTask => subTask.id !== subTaskId)
+          }
+          : group
+      );
+      setSubTasks(updatedSubTasks);
+      saveToLocalStorage('subTasks', updatedSubTasks);
+    } catch (error) {
+      console.error('Failed to delete sub task', error);
+    }
+  };
+
   const startEditingTask = (task: IMainTask) => {
     setEditingTaskId(task.id);
     setEditingTaskDescription(task.description);
@@ -358,12 +376,20 @@ function Todo() {
                       </button>
                     </>
                   ) : (
-                    <button
-                      onClick={() => startEditingSubTask(subTask)}
-                      className="text-blue-500 mr-2"
-                    >
-                      Edit
-                    </button>
+                    <>
+                      <button
+                        onClick={() => startEditingSubTask(subTask)}
+                        className="text-blue-500 mr-2"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteSubTask(task.id, subTask.id)}
+                        className="text-red-500"
+                      >
+                        Delete
+                      </button>
+                    </>
                   )}
                 </div>
               ))}
