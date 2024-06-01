@@ -31,6 +31,8 @@ function Todo() {
   );
 
   const [newTaskDescription, setNewTaskDescription] = useState('');
+  const [newSubTaskDescription, setNewSubTaskDescription] = useState('');
+  const [selectedMainTaskId, setSelectedMainTaskId] = useState<number | null>(null);
   const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
   const [editingTaskDescription, setEditingTaskDescription] = useState('');
 
@@ -146,6 +148,29 @@ function Todo() {
     }
   };
 
+  const handleCreateSubTask = async (mainTaskId: number) => {
+    if (newSubTaskDescription.trim() !== '') {
+      try {
+        const { data: newSubTask } = await api('post', `/SubTask`, {
+          mainTaskId,
+          description: newSubTaskDescription
+        });
+        const updatedSubTasks = subTasks.map(group =>
+          group.mainTaskId === mainTaskId
+            ? { ...group, subTasks: [...group.subTasks, newSubTask] }
+            : group
+        );
+        setSubTasks(updatedSubTasks);
+        saveToLocalStorage('subTasks', updatedSubTasks);
+        setNewSubTaskDescription('');
+      } catch (error) {
+        console.error('Failed to create sub task', error);
+      }
+    } else {
+      console.log('Invalid data');
+    }
+  };
+
   const startEditingTask = (task: IMainTask) => {
     setEditingTaskId(task.id);
     setEditingTaskDescription(task.description);
@@ -221,15 +246,38 @@ function Todo() {
                     >
                       Delete
                     </button>
+                    <button
+                      onClick={() => setSelectedMainTaskId(task.id)}
+                      className="text-green-500"
+                    >
+                      Add SubTask
+                    </button>
                   </>
                 )}
               </div>
             </div>
+            {selectedMainTaskId === task.id && (
+              <div className="flex items-center mt-2">
+                <input
+                  type="text"
+                  value={newSubTaskDescription}
+                  onChange={(e) => setNewSubTaskDescription(e.target.value)}
+                  className="border rounded p-2 flex-grow mr-2"
+                  placeholder="New sub-task description"
+                />
+                <button
+                  onClick={() => handleCreateSubTask(task.id)}
+                  className="bg-blue-500 text-white p-2 rounded"
+                >
+                  Add SubTask
+                </button>
+              </div>
+            )}
             {subTasks
               .filter((subTaskGroup) => subTaskGroup.mainTaskId === task.id)
               .flatMap((subTaskGroup) => subTaskGroup.subTasks)
               .map((subTask: ISubTask) => (
-                <div key={subTask.id} className="flex items-center justify-between mt-2">
+                <div key={`${task.id}-${subTask.id}`} className="flex items-center justify-between mt-2">
                   <label>
                     <p className="text-sm">{subTask.description}</p>
                     <input
@@ -245,6 +293,7 @@ function Todo() {
       ) : (
         <p>No tasks found</p>
       )}
+
     </div>
   );
 }
