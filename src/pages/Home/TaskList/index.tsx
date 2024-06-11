@@ -4,8 +4,8 @@ import { getFromLocalStorage, saveToLocalStorage } from '../../../helpers/locals
 import { IMainTask, ISubTask, ISubTaskGroup } from '../../../interfaces/TaskInterfaces'
 import { useAuth } from "../../../context/AuthContext";
 
-import MainTask from '../MainTask'
-import AddTask from '../AddTask'
+import MainTask from './MainTask'
+import AddTask from './AddTask'
 import api from '../../../api';
 
 function Todo() {
@@ -87,7 +87,6 @@ function Todo() {
   const handleCreateMainTask = async () => {
     if (newTaskDescription.trim() !== '' && userData && userData.id) {
       try {
-        console.log('1', newTaskDescription)
         const { data: newMainTask } = await api('post', '/MainTask', {
           userId: userData.id,
           description: newTaskDescription

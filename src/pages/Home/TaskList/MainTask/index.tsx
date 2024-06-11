@@ -1,8 +1,8 @@
 import React from 'react';
-import { IMainTask } from '../../../interfaces/TaskInterfaces';
+import { IMainTask } from '../../../../interfaces/TaskInterfaces';
 import { MainTaskProps } from './MainTaskProps';
 
-import SubTask from '../SubTask';
+import SubTask from './SubTask';
 
 function MainTask({
   mainTasks,

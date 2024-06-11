@@ -1,5 +1,5 @@
 import React from 'react';
-import { IMainTask, ISubTask, ISubTaskGroup } from '../../../interfaces/TaskInterfaces';
+import { IMainTask, ISubTask, ISubTaskGroup } from '../../../../../interfaces/TaskInterfaces';
 
 function SubTask(
   {

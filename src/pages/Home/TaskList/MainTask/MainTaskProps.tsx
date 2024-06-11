@@ -1,4 +1,4 @@
-import { IMainTask, ISubTask, ISubTaskGroup } from '../../../interfaces/TaskInterfaces';
+import { IMainTask, ISubTask, ISubTaskGroup } from '../../../../interfaces/TaskInterfaces';
 
 export interface MainTaskProps {
   mainTasks: IMainTask[];
