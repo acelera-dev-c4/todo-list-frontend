@@ -1,6 +1,6 @@
 import React from 'react';
 import { IMainTask, ISubTask, ISubTaskGroup } from '../../../../../interfaces/TaskInterfaces';
-import { Save, Close, Edit, Delete } from '@mui/icons-material';
+import { Save, Close, Edit, Delete, CheckBox, CheckBoxOutlineBlank } from '@mui/icons-material';
 
 function SubTask(
   {
@@ -44,7 +44,7 @@ function SubTask(
                     e.stopPropagation();
                     setEditingSubTaskDescription(e.target.value);
                   }}
-                  className="border border-gray-300 rounded p-2 flex-grow mr-2 text-gray-700"
+                  className="border border-gray-300 rounded flex-grow mr-2 text-gray-700"
                   placeholder="Enter sub-task description"
                 />
               ) : (
@@ -52,15 +52,23 @@ function SubTask(
                   {subTask.description}
                 </p>
               )}
-              <input
-                type="checkbox"
-                checked={subTask.finished}
-                onChange={(e) => {
-                  e.stopPropagation();
-                  handleSubTaskChange(task.id, subTask.id);
-                }}
-                className="ml-2 form-checkbox h-5 w-5 text-blue-600"
-              />
+              {subTask.finished ? (
+                <CheckBox
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSubTaskChange(task.id, subTask.id);
+                  }}
+                  className="ml-2 cursor-pointer text-gray-600 hover:text-gray-700"
+                />
+              ) : (
+                <CheckBoxOutlineBlank
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSubTaskChange(task.id, subTask.id);
+                  }}
+                  className="ml-2 cursor-pointer text-gray-600 hover:text-gray-700"
+                />
+              )}
             </label>
             {editingSubTaskId === subTask.id ? (
               <>
@@ -77,7 +85,7 @@ function SubTask(
                     e.stopPropagation();
                     cancelEditingSubTask();
                   }}
-                  className="bg-red-500 text-white p-2 rounded hover:bg-red-600 cursor-pointer w-6 h-6"
+                  className="bg-red-500 text-white p-2 rounded mr-2 hover:bg-red-600 cursor-pointer w-6 h-6"
                   fontSize="medium"
                 />
               </>

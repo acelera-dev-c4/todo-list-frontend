@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Add} from '@mui/icons-material';
+import { Add } from '@mui/icons-material';
 
 interface AddTaskProps {
   newTaskDescription: string;
@@ -21,7 +21,7 @@ function AddTask({ newTaskDescription, setNewTaskDescription, handleCreateMainTa
       />
       <Add
         onClick={handleCreateMainTask}
-        className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 cursor-pointer"
+        className="bg-green-500 text-white p-2 rounded hover:bg-green-600 cursor-pointer"
         fontSize="large"
       />
     </div>
