@@ -65,23 +65,24 @@ function TaskList() {
   }, [mainTasks]);
 
   const handleSubTaskChange = (mainTaskId: number, subTaskId: number) => {
-    setSubTasks(prevSubTasks =>
-      prevSubTasks.map(group =>
-        group.mainTaskId === mainTaskId
-          ? {
-            ...group,
-            subTasks: group.subTasks.map(subTask =>
-              subTask.id === subTaskId
-                ? {
-                  ...subTask,
-                  finished: !subTask.finished
-                }
-                : subTask
-            ),
-          }
-          : group
-      )
+    const updatedSubTasks = subTasks.map(group =>
+      group.mainTaskId === mainTaskId
+        ? {
+          ...group,
+          subTasks: group.subTasks.map(subTask =>
+            subTask.id === subTaskId
+              ? {
+                ...subTask,
+                finished: !subTask.finished
+              }
+              : subTask
+          ),
+        }
+        : group
     );
+
+    setSubTasks(updatedSubTasks);
+    saveToLocalStorage('subTasks', updatedSubTasks);
   };
 
   const handleCreateMainTask = async () => {
@@ -239,7 +240,7 @@ function TaskList() {
         setNewTaskDescription={setNewTaskDescription}
         handleCreateMainTask={handleCreateMainTask}
       />
-  
+
       {mainTasks.length > 0 ? (
         <MainTask
           mainTasks={mainTasks}
