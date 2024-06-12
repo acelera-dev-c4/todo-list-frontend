@@ -8,7 +8,7 @@ import MainTask from './MainTask'
 import AddTask from './AddTask'
 import api from '../../../api';
 
-function Todo() {
+function TaskList() {
   const [mainTasks, setMainTasks] = useState<IMainTask[]>(
     () => getFromLocalStorage('mainTasks') || []
   );
@@ -233,13 +233,13 @@ function Todo() {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col space-y-4 p-4 bg-gray-50 rounded-lg shadow">
       <AddTask
         newTaskDescription={newTaskDescription}
         setNewTaskDescription={setNewTaskDescription}
         handleCreateMainTask={handleCreateMainTask}
       />
-
+  
       {mainTasks.length > 0 ? (
         <MainTask
           mainTasks={mainTasks}
@@ -266,10 +266,10 @@ function Todo() {
           handleSubTaskChange={handleSubTaskChange}
         />
       ) : (
-        <p>No tasks found</p>
+        <p className="text-center text-gray-400">Tasks not found</p>
       )}
     </div>
   );
 }
 
-export default Todo;
+export default TaskList;

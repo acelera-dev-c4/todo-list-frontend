@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { IMainTask } from '../../../../interfaces/TaskInterfaces';
 import { MainTaskProps } from './MainTaskProps';
-
 import SubTask from './SubTask';
 
 function MainTask({
@@ -28,98 +27,81 @@ function MainTask({
   setEditingSubTaskDescription,
   handleSubTaskChange,
 }: MainTaskProps) {
+  const [collapsed, setCollapsed] = useState<number | null>(null);
+
+  const toggleCollapse = (taskId: number) => {
+    setCollapsed(prev => prev === taskId ? null : taskId);
+  };
 
   return (
-    <>
+    <div className="grid md:grid-cols-2 gap-4">
       {mainTasks.map((task: IMainTask) => (
-        <div key={task.id} className="flex flex-col bg-white p-4 rounded-lg shadow-md mb-4">
-          <div className="flex items-center justify-between">
-            <div>
-              {editingTaskId === task.id ? (
-                <input
-                  type="text"
-                  value={editingTaskDescription}
-                  onChange={(e) => setEditingTaskDescription(e.target.value)}
-                  className="border rounded p-2 flex-grow mr-2"
-                  title="Editing Task Description"
-                  placeholder="Enter task description"
-                />
-              ) : (
-                <h3 className="text-lg font-semibold">{task.description}</h3>
-              )}
+        <div key={task.id} className="bg-white p-4 rounded-lg shadow-md mb-4 space-y-3">
+          <div className="flex items-center justify-between" onClick={() => toggleCollapse(task.id)}>
+            <div className="flex-grow">
+              <h3 className="text-lg font-semibold text-gray-800">{task.description}</h3>
             </div>
-            <div className="flex items-center">
-              {editingTaskId === task.id ? (
-                <>
-                  <button
-                    onClick={handleUpdateMainTask}
-                    className="bg-green-500 text-white p-2 rounded mr-2"
-                  >
-                    Save
-                  </button>
-                  <button
-                    onClick={cancelEditing}
-                    className="bg-red-500 text-white p-2 rounded"
-                  >
-                    Cancel
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    onClick={() => startEditingTask(task)}
-                    className="text-blue-500 mr-2"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeleteMainTask(task.id)}
-                    className="text-red-500"
-                  >
-                    Delete
-                  </button>
-                  <button
-                    onClick={() => setSelectedMainTaskId(task.id)}
-                    className="text-green-500"
-                  >
-                    Add SubTask
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
-          {selectedMainTaskId === task.id && (
-            <div className="flex items-center mt-2">
-              <input
-                type="text"
-                value={newSubTaskDescription}
-                onChange={(e) => setNewSubTaskDescription(e.target.value)}
-                className="border rounded p-2 flex-grow mr-2"
-                placeholder="New sub-task description"
-              />
+            <div className="flex items-center space-x-2">
               <button
-                onClick={() => handleCreateSubTask(task.id)}
-                className="bg-blue-500 text-white p-2 rounded"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  startEditingTask(task);
+                }}
+                className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 text-xs"
               >
-                Add SubTask
+                Edit
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteMainTask(task.id);
+                }}
+                className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 text-xs"
+              >
+                Delete
               </button>
             </div>
+          </div>
+          {collapsed === task.id && (
+            <>
+              <div className="flex items-center">
+                <input
+                  type="text"
+                  value={newSubTaskDescription}
+                  onChange={(e) => {
+                    e.stopPropagation();
+                    setNewSubTaskDescription(e.target.value);
+                  }}
+                  className="border border-gray-300 rounded p-2 flex-grow mr-2 text-gray-700"
+                  placeholder="New sub-task description"
+                />
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCreateSubTask(task.id);
+                  }}
+                  className="bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-700 text-xs"
+                >
+                  Add SubTask
+                </button>
+              </div>
+              <SubTask
+                subTasks={subTasks}
+                task={task}
+                editingSubTaskId={editingSubTaskId}
+                editingSubTaskDescription={editingSubTaskDescription}
+                setEditingSubTaskDescription={setEditingSubTaskDescription}
+                startEditingSubTask={startEditingSubTask}
+                cancelEditingSubTask={cancelEditingSubTask}
+                handleUpdateSubTask={handleUpdateSubTask}
+                handleDeleteSubTask={handleDeleteSubTask}
+                handleSubTaskChange={handleSubTaskChange}
+              />
+            </>
           )}
-          <SubTask
-            subTasks={subTasks}
-            task={task}
-            editingSubTaskId={editingSubTaskId}
-            editingSubTaskDescription={editingSubTaskDescription}
-            setEditingSubTaskDescription={setEditingSubTaskDescription}
-            startEditingSubTask={startEditingSubTask}
-            cancelEditingSubTask={cancelEditingSubTask}
-            handleUpdateSubTask={handleUpdateSubTask}
-            handleDeleteSubTask={handleDeleteSubTask}
-            handleSubTaskChange={handleSubTaskChange}
-          />
         </div>
       ))}
-    </>
+    </div>
   );
 }
 
