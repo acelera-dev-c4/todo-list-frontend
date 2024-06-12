@@ -1,5 +1,6 @@
 import React from 'react';
 import { IMainTask, ISubTask, ISubTaskGroup } from '../../../../../interfaces/TaskInterfaces';
+import { Save, Close, Edit, Delete } from '@mui/icons-material';
 
 function SubTask(
   {
@@ -63,45 +64,41 @@ function SubTask(
             </label>
             {editingSubTaskId === subTask.id ? (
               <>
-                <button
+                <Save
                   onClick={(e) => {
                     e.stopPropagation();
                     handleUpdateSubTask(task.id, subTask.id);
                   }}
-                  className="bg-green-500 text-white p-2 rounded mr-2 hover:bg-green-600 text-xs"
-                >
-                  Save
-                </button>
-                <button
+                  className="bg-green-500 text-white p-2 rounded ml-2 mr-2 hover:bg-green-600 cursor-pointer w-6 h-6"
+                  fontSize="medium"
+                />
+                <Close
                   onClick={(e) => {
                     e.stopPropagation();
                     cancelEditingSubTask();
                   }}
-                  className="bg-red-500 text-white p-2 rounded hover:bg-red-600 text-xs"
-                >
-                  Cancel
-                </button>
+                  className="bg-red-500 text-white p-2 rounded hover:bg-red-600 cursor-pointer w-6 h-6"
+                  fontSize="medium"
+                />
               </>
             ) : (
               <>
-                <button
+                <Edit
                   onClick={(e) => {
                     e.stopPropagation();
                     startEditingSubTask(subTask);
                   }}
-                  className="bg-blue-500 text-white p-2 rounded mr-2 hover:bg-blue-600 text-xs"
-                >
-                  Edit
-                </button>
-                <button
+                  className="bg-blue-500 text-white p-2 rounded mr-2 hover:bg-blue-600 cursor-pointer w-6 h-6"
+                  fontSize="medium"
+                />
+                <Delete
                   onClick={(e) => {
                     e.stopPropagation();
                     handleDeleteSubTask(task.id, subTask.id);
                   }}
-                  className="bg-red-500 text-white p-2 rounded hover:bg-red-600 text-xs"
-                >
-                  Delete
-                </button>
+                  className="bg-red-500 text-white p-2 rounded hover:bg-red-600 cursor-pointer w-6 h-6"
+                  fontSize="medium"
+                />
               </>
             )}
           </div>

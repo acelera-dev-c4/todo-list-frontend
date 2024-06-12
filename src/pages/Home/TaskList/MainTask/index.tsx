@@ -3,6 +3,8 @@ import { IMainTask } from '../../../../interfaces/TaskInterfaces';
 import { MainTaskProps } from './MainTaskProps';
 import SubTask from './SubTask';
 
+import { Edit, Delete, AddTask } from '@mui/icons-material';
+
 function MainTask({
   mainTasks,
   subTasks,
@@ -36,30 +38,28 @@ function MainTask({
   return (
     <div className="grid md:grid-cols-2 gap-4">
       {mainTasks.map((task: IMainTask) => (
-        <div key={task.id} className="bg-white p-4 rounded-lg shadow-md mb-4 space-y-3">
+        <div key={task.id} className="bg-white p-4 rounded-lg shadow-md mb-4 space-y-3 cursor-pointer hover:bg-gray-100">
           <div className="flex items-center justify-between" onClick={() => toggleCollapse(task.id)}>
             <div className="flex-grow">
               <h3 className="text-lg font-semibold text-gray-800">{task.description}</h3>
             </div>
             <div className="flex items-center space-x-2">
-              <button
+              <Edit
                 onClick={(e) => {
                   e.stopPropagation();
                   startEditingTask(task);
                 }}
-                className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 text-xs"
-              >
-                Edit
-              </button>
-              <button
+                className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 cursor-pointer w-6 h-6"
+                fontSize="large"
+              />
+              <Delete
                 onClick={(e) => {
                   e.stopPropagation();
                   handleDeleteMainTask(task.id);
                 }}
-                className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 text-xs"
-              >
-                Delete
-              </button>
+                className="bg-red-500 text-white p-2 rounded hover:bg-red-600 cursor-pointer w-6 h-6"
+                fontSize="large"
+              />
             </div>
           </div>
           {collapsed === task.id && (
@@ -75,15 +75,14 @@ function MainTask({
                   className="border border-gray-300 rounded p-2 flex-grow mr-2 text-gray-700"
                   placeholder="New sub-task description"
                 />
-                <button
+                <AddTask
                   onClick={(e) => {
                     e.stopPropagation();
                     handleCreateSubTask(task.id);
                   }}
-                  className="bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-700 text-xs"
-                >
-                  Add SubTask
-                </button>
+                  className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 cursor-pointer w-6 h-6"
+                  fontSize="large"
+                />
               </div>
               <SubTask
                 subTasks={subTasks}
