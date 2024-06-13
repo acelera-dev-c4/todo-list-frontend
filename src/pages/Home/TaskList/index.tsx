@@ -8,6 +8,8 @@ import MainTask from './MainTask'
 import AddTask from './AddTask'
 import api from '../../../api';
 
+import Loading from '../../../components/Loading'
+
 function TaskList() {
   const [mainTasks, setMainTasks] = useState<IMainTask[]>(
     () => getFromLocalStorage('mainTasks') || []
@@ -25,17 +27,22 @@ function TaskList() {
   const [editingSubTaskId, setEditingSubTaskId] = useState<number | null>(null);
   const [editingSubTaskDescription, setEditingSubTaskDescription] = useState('');
 
+  const [loading, setLoading] = useState(false);
+
   const { userData } = useAuth();
 
   useEffect(() => {
     async function fetchMainTasks() {
       if (userData && userData.id) {
         try {
+          setLoading(true);
           const { data: mainTasksData } = await api('get', `/MainTask/${userData.id}`);
           setMainTasks(mainTasksData);
           saveToLocalStorage('mainTasks', mainTasksData);
         } catch (error) {
           console.error("Failed to fetch main tasks", error);
+        } finally {
+          setLoading(false);
         }
       }
     }
@@ -47,6 +54,7 @@ function TaskList() {
     async function fetchSubTasks() {
       if (mainTasks.length > 0) {
         try {
+          setLoading(true);
           const subTasksDataPromises = mainTasks.map(async (task: IMainTask) => {
             const { data: subTasksData } = await api('get', `/SubTask/${task.id}`);
             return { mainTaskId: task.id, subTasks: subTasksData };
@@ -57,6 +65,8 @@ function TaskList() {
           saveToLocalStorage('subTasks', subTasksData);
         } catch (error) {
           console.error("Failed to fetch sub tasks", error);
+        } finally {
+          setLoading(false);
         }
       }
     }
@@ -88,6 +98,7 @@ function TaskList() {
   const handleCreateMainTask = async () => {
     if (newTaskDescription.trim() !== '' && userData && userData.id) {
       try {
+        setLoading(true);
         const { data: newMainTask } = await api('post', '/MainTask', {
           userId: userData.id,
           description: newTaskDescription
@@ -98,6 +109,8 @@ function TaskList() {
         setNewTaskDescription('');
       } catch (error) {
         console.error('Failed to create main task', error);
+      } finally {
+        setLoading(false);
       }
     } else {
       console.log('Invalid data');
@@ -106,7 +119,9 @@ function TaskList() {
 
   const handleUpdateMainTask = async () => {
     if (editingTaskId !== null && editingTaskDescription.trim() !== '') {
+      console.log(editingTaskDescription)
       try {
+        setLoading(true);
         await api('put', `/MainTask/${editingTaskId}`, {
           description: editingTaskDescription
         });
@@ -119,6 +134,8 @@ function TaskList() {
         setEditingTaskDescription('');
       } catch (error) {
         console.error('Failed to update main task', error);
+      } finally {
+        setLoading(false);
       }
     } else {
       console.log('Invalid data');
@@ -127,6 +144,7 @@ function TaskList() {
 
   const handleDeleteMainTask = async (mainTaskId: number) => {
     try {
+      setLoading(true);
       await api('delete', `/MainTask/${mainTaskId}`);
       const updatedMainTasks = mainTasks.filter(task => task.id !== mainTaskId);
       setMainTasks(updatedMainTasks);
@@ -136,12 +154,15 @@ function TaskList() {
       saveToLocalStorage('subTasks', updatedSubTasks);
     } catch (error) {
       console.error('Failed to delete main task', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleCreateSubTask = async (mainTaskId: number) => {
     if (newSubTaskDescription.trim() !== '') {
       try {
+        setLoading(true);
         const { data: newSubTask } = await api('post', `/SubTask`, {
           mainTaskId,
           description: newSubTaskDescription
@@ -156,6 +177,8 @@ function TaskList() {
         setNewSubTaskDescription('');
       } catch (error) {
         console.error('Failed to create sub task', error);
+      } finally {
+        setLoading(false);
       }
     } else {
       console.log('Invalid data');
@@ -168,6 +191,7 @@ function TaskList() {
       const subTask = subTaskGroup.subTasks.find(subTask => subTask.id === subTaskId);
       if (subTask) {
         try {
+          setLoading(true);
           await api('put', `/SubTask/${subTaskId}`, {
             description: editingSubTaskDescription || subTask.description,
             finished: subTask.finished
@@ -190,6 +214,8 @@ function TaskList() {
           setEditingSubTaskDescription('');
         } catch (error) {
           console.error('Failed to update sub task', error);
+        } finally {
+          setLoading(false);
         }
       }
     }
@@ -197,6 +223,7 @@ function TaskList() {
 
   const handleDeleteSubTask = async (mainTaskId: number, subTaskId: number) => {
     try {
+      setLoading(true);
       await api('delete', `/SubTask/${subTaskId}`);
       const updatedSubTasks = subTasks.map(group =>
         group.mainTaskId === mainTaskId
@@ -210,6 +237,8 @@ function TaskList() {
       saveToLocalStorage('subTasks', updatedSubTasks);
     } catch (error) {
       console.error('Failed to delete sub task', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -235,6 +264,8 @@ function TaskList() {
 
   return (
     <div className="flex flex-col space-y-4 p-4 bg-gray-50 rounded-lg shadow">
+      {loading && <Loading />}
+      
       <AddTask
         newTaskDescription={newTaskDescription}
         setNewTaskDescription={setNewTaskDescription}
