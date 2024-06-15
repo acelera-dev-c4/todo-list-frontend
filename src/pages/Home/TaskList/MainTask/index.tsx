@@ -42,8 +42,10 @@ function MainTask({
           key={task.id}
           className={`bg-white p-4 rounded-lg shadow-md mb-4 space-y-3 cursor-pointer hover:bg-gray-100 ${selectedMainTaskId === task.id ? 'bg-gray-200' : ''}`}
           onClick={(e) => {
-            toggleCollapse(task.id);
-            setSelectedMainTaskId(task.id);
+            if (editingTaskId !== task.id) {
+              toggleCollapse(task.id);
+              setSelectedMainTaskId(task.id);
+            }
           }}
         >
           <div className="flex items-center justify-between">
@@ -68,8 +70,8 @@ function MainTask({
                   <Save
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleUpdateMainTask(); // Chama a função para atualizar a tarefa
-                      cancelEditing(); // Sai do modo de edição após salvar
+                      handleUpdateMainTask();
+                      cancelEditing();
                     }}
                     className="bg-green-500 text-white p-2 rounded hover:bg-green-600 cursor-pointer w-6 h-6"
                     fontSize="large"
@@ -77,7 +79,7 @@ function MainTask({
                   <Close
                     onClick={(e) => {
                       e.stopPropagation();
-                      cancelEditing(); // Cancela o modo de edição sem salvar
+                      cancelEditing();
                     }}
                     className="bg-red-500 text-white p-2 rounded hover:bg-red-600 cursor-pointer w-6 h-6"
                     fontSize="large"
@@ -88,7 +90,7 @@ function MainTask({
                   <Edit
                     onClick={(e) => {
                       e.stopPropagation();
-                      startEditingTask(task); // Inicia o modo de edição
+                      startEditingTask(task);
                     }}
                     className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 cursor-pointer w-6 h-6"
                     fontSize="large"
@@ -96,7 +98,7 @@ function MainTask({
                   <Delete
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleDeleteMainTask(task.id); // Chama a função para deletar a tarefa
+                      handleDeleteMainTask(task.id);
                     }}
                     className="bg-red-500 text-white p-2 rounded hover:bg-red-600 cursor-pointer w-6 h-6"
                     fontSize="large"
