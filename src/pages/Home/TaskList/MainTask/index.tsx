@@ -3,7 +3,7 @@ import { IMainTask } from '../../../../interfaces/TaskInterfaces';
 import { MainTaskProps } from './MainTaskProps';
 import SubTask from './SubTask';
 
-import { Edit, Delete, AddTask } from '@mui/icons-material';
+import { Edit, Delete, AddTask, Save, Close } from '@mui/icons-material';
 
 function MainTask({
   mainTasks,
@@ -38,28 +38,71 @@ function MainTask({
   return (
     <div className="grid md:grid-cols-2 gap-4">
       {mainTasks.map((task: IMainTask) => (
-        <div key={task.id} className="bg-white p-4 rounded-lg shadow-md mb-4 space-y-3 cursor-pointer hover:bg-gray-100">
-          <div className="flex items-center justify-between" onClick={() => toggleCollapse(task.id)}>
-            <div className="flex-grow">
-              <h3 className="text-lg font-semibold text-gray-800">{task.description}</h3>
-            </div>
+        <div
+          key={task.id}
+          className={`bg-white p-4 rounded-lg shadow-md mb-4 space-y-3 cursor-pointer hover:bg-gray-100 ${selectedMainTaskId === task.id ? 'bg-gray-200' : ''}`}
+          onClick={(e) => {
+            toggleCollapse(task.id);
+            setSelectedMainTaskId(task.id);
+          }}
+        >
+          <div className="flex items-center justify-between">
+            <label className="flex-grow">
+              {editingTaskId === task.id ? (
+                <input
+                  type="text"
+                  value={editingTaskDescription}
+                  onChange={(e) => {
+                    e.stopPropagation();
+                    setEditingTaskDescription(e.target.value);
+                  }}
+                  className="border border-gray-300 rounded p-2 flex-grow"
+                />
+              ) : (
+                <h3 className="text-lg font-semibold text-gray-800">{task.description}</h3>
+              )}
+            </label>
             <div className="flex items-center space-x-2">
-              <Edit
-                onClick={(e) => {
-                  e.stopPropagation();
-                  startEditingTask(task);
-                }}
-                className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 cursor-pointer w-6 h-6"
-                fontSize="large"
-              />
-              <Delete
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteMainTask(task.id);
-                }}
-                className="bg-red-500 text-white p-2 rounded hover:bg-red-600 cursor-pointer w-6 h-6"
-                fontSize="large"
-              />
+              {editingTaskId === task.id ? (
+                <>
+                  <Save
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleUpdateMainTask(); // Chama a função para atualizar a tarefa
+                      cancelEditing(); // Sai do modo de edição após salvar
+                    }}
+                    className="bg-green-500 text-white p-2 rounded hover:bg-green-600 cursor-pointer w-6 h-6"
+                    fontSize="large"
+                  />
+                  <Close
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      cancelEditing(); // Cancela o modo de edição sem salvar
+                    }}
+                    className="bg-red-500 text-white p-2 rounded hover:bg-red-600 cursor-pointer w-6 h-6"
+                    fontSize="large"
+                  />
+                </>
+              ) : (
+                <>
+                  <Edit
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      startEditingTask(task); // Inicia o modo de edição
+                    }}
+                    className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 cursor-pointer w-6 h-6"
+                    fontSize="large"
+                  />
+                  <Delete
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteMainTask(task.id); // Chama a função para deletar a tarefa
+                    }}
+                    className="bg-red-500 text-white p-2 rounded hover:bg-red-600 cursor-pointer w-6 h-6"
+                    fontSize="large"
+                  />
+                </>
+              )}
             </div>
           </div>
           {collapsed === task.id && (

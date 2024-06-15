@@ -96,6 +96,9 @@ function TaskList() {
   };
 
   const handleCreateMainTask = async () => {
+    console.log('1', newTaskDescription.trim())
+    console.log('2', userData)
+    console.log('3', userData.id)
     if (newTaskDescription.trim() !== '' && userData && userData.id) {
       try {
         setLoading(true);
@@ -119,7 +122,6 @@ function TaskList() {
 
   const handleUpdateMainTask = async () => {
     if (editingTaskId !== null && editingTaskDescription.trim() !== '') {
-      console.log(editingTaskDescription)
       try {
         setLoading(true);
         await api('put', `/MainTask/${editingTaskId}`, {
@@ -186,6 +188,10 @@ function TaskList() {
   };
 
   const handleUpdateSubTask = async (mainTaskId: number, subTaskId: number) => {
+    if (mainTaskId == null || subTaskId == null) {
+      console.error("MainTaskId or SubTaskId is null");
+      return;
+    }
     const subTaskGroup = subTasks.find(group => group.mainTaskId === mainTaskId);
     if (subTaskGroup) {
       const subTask = subTaskGroup.subTasks.find(subTask => subTask.id === subTaskId);
