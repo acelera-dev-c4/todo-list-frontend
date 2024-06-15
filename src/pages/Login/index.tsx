@@ -1,11 +1,15 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
+
 import Button from "../../components/Button";
-import axios from "axios";
+import Loading from "../../components/Loading";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const { login } = useAuth();
 
   const handleButtonClick = async () => {
     try {
@@ -15,28 +19,21 @@ export default function Login() {
         email,
         password,
       };
+      await login(params);
 
-      const { data } = await axios.post(
-        "https://aceleradev.sharebook.com.br/Auth",
-        params,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        }
-      );
-
-      setLoading(false);
-
-      console.log("data", data);
     } catch (error) {
       console.log("error", error);
+    } finally {
+      setEmail("");
+      setPassword("");
+      setLoading(false);
     }
   };
 
   return (
     <div className="w-full h-full flex items-center justify-center bg-gray-100 p-5">
+      {loading && <Loading />}
+
       <div className="w-full min-w-[400px] md:w-auto flex flex-col items-center p-5 gap-5 shadow-xl border border-zinc-200 bg-zinc-50 rounded-md">
         <h1 className="text-black text-2xl font-bold">Login</h1>
 
