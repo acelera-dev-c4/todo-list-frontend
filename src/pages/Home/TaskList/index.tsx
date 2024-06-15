@@ -96,9 +96,6 @@ function TaskList() {
   };
 
   const handleCreateMainTask = async () => {
-    console.log('1', newTaskDescription.trim())
-    console.log('2', userData)
-    console.log('3', userData.id)
     if (newTaskDescription.trim() !== '' && userData && userData.id) {
       try {
         setLoading(true);
@@ -106,7 +103,6 @@ function TaskList() {
           userId: userData.id,
           description: newTaskDescription
         });
-        console.log(newMainTask)
         setMainTasks([...mainTasks, newMainTask]);
         saveToLocalStorage('mainTasks', [...mainTasks, newMainTask]);
         setNewTaskDescription('');
@@ -271,7 +267,7 @@ function TaskList() {
   return (
     <div className="flex flex-col space-y-4 p-4 bg-gray-50 rounded-lg shadow">
       {loading && <Loading />}
-      
+
       <AddTask
         newTaskDescription={newTaskDescription}
         setNewTaskDescription={setNewTaskDescription}

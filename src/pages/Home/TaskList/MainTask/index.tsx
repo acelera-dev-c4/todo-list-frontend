@@ -36,11 +36,11 @@ function MainTask({
   };
 
   return (
-    <div className="grid md:grid-cols-2 gap-4">
+    <div className="grid md:grid-cols-2 gap-4 cursor-pointer">
       {mainTasks.map((task: IMainTask) => (
         <div
           key={task.id}
-          className={`bg-white p-4 rounded-lg shadow-md mb-4 space-y-3 cursor-pointer hover:bg-gray-100 ${selectedMainTaskId === task.id ? 'bg-gray-200' : ''}`}
+          className={`bg-white p-4 rounded-lg shadow-md mb-4 space-y-3 hover:bg-gray-100 ${selectedMainTaskId === task.id ? 'bg-gray-200' : ''}`}
           onClick={(e) => {
             if (editingTaskId !== task.id) {
               toggleCollapse(task.id);
@@ -49,7 +49,7 @@ function MainTask({
           }}
         >
           <div className="flex items-center justify-between">
-            <label className="flex-grow">
+            <label className="flex-grow cursor-pointer">
               {editingTaskId === task.id ? (
                 <input
                   type="text"
