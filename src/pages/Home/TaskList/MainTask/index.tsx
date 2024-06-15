@@ -117,6 +117,7 @@ function MainTask({
                     e.stopPropagation();
                     setNewSubTaskDescription(e.target.value);
                   }}
+                  onClick={(e) => e.stopPropagation()}
                   className="border border-gray-300 rounded p-2 flex-grow mr-2 text-gray-700"
                   placeholder="New sub-task description"
                 />
