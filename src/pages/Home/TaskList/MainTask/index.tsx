@@ -41,15 +41,18 @@ function MainTask({
         <div
           key={task.id}
           className={`bg-white p-4 rounded-lg shadow-md mb-4 space-y-3 hover:bg-gray-100 ${selectedMainTaskId === task.id ? 'bg-gray-200' : ''}`}
-          onClick={(e) => {
-            if (editingTaskId !== task.id) {
-              toggleCollapse(task.id);
-              setSelectedMainTaskId(task.id);
-            }
-          }}
         >
           <div className="flex items-center justify-between">
-            <label className="flex-grow cursor-pointer">
+            <label
+              className="flex-grow cursor-pointer"
+              onClick={(e) => {
+                if (editingTaskId !== task.id) {
+                  e.stopPropagation();
+                  toggleCollapse(task.id);
+                  setSelectedMainTaskId(task.id);
+                }
+              }}
+            >
               {editingTaskId === task.id ? (
                 <input
                   type="text"
@@ -58,6 +61,7 @@ function MainTask({
                     e.stopPropagation();
                     setEditingTaskDescription(e.target.value);
                   }}
+                  onClick={(e) => e.stopPropagation()}
                   className="border border-gray-300 rounded p-2 flex-grow"
                 />
               ) : (
