@@ -36,11 +36,11 @@ function MainTask({
   };
 
   return (
-    <div className="grid md:grid-cols-2 gap-4 cursor-pointer">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {mainTasks.map((task: IMainTask) => (
         <div
           key={task.id}
-          className={`bg-white p-4 rounded-lg shadow-md mb-4 space-y-3 hover:bg-gray-100 ${selectedMainTaskId === task.id ? 'bg-gray-200' : ''}`}
+          className={`bg-white p-4 rounded-lg shadow-md hover:bg-gray-100 ${selectedMainTaskId === task.id ? 'bg-gray-200' : ''}`}
         >
           <div className="flex items-center justify-between">
             <label
@@ -113,7 +113,7 @@ function MainTask({
           </div>
           {collapsed === task.id && (
             <>
-              <div className="flex items-center">
+              <div className="flex flex-row items-center justify-between w-full mb-2">
                 <input
                   type="text"
                   value={newSubTaskDescription}
@@ -122,7 +122,7 @@ function MainTask({
                     setNewSubTaskDescription(e.target.value);
                   }}
                   onClick={(e) => e.stopPropagation()}
-                  className="border border-gray-300 rounded p-2 flex-grow mr-2 text-gray-700"
+                  className="flex-grow w-1/2 border border-gray-300 rounded p-2 text-gray-700 mr-2 mt-2"
                   placeholder="New sub-task description"
                 />
                 <AddTask
@@ -130,7 +130,7 @@ function MainTask({
                     e.stopPropagation();
                     handleCreateSubTask(task.id);
                   }}
-                  className="bg-green-500 text-white p-2 rounded hover:bg-green-600 cursor-pointer w-6 h-6"
+                  className="ml-auto bg-green-500 text-white p-2 rounded hover:bg-green-600 cursor-pointer w-6 h-6"
                   fontSize="large"
                 />
               </div>
