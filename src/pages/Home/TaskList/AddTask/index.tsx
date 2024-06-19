@@ -23,7 +23,7 @@ function AddTask({ newTaskDescription, setNewTaskDescription, handleCreateMainTa
         value={newTaskDescription}
         onChange={(e) => setNewTaskDescription(e.target.value)}
         onKeyDown={handleKeyDown}
-        className="border rounded p-2 flex-grow mr-2 "
+        className="border rounded p-2 flex-grow mr-2"
         placeholder="New task description"
       />
       <Add

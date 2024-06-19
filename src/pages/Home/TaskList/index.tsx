@@ -265,7 +265,7 @@ function TaskList() {
   };
 
   return (
-    <div className="flex flex-col space-y-4 p-4 bg-gray-50 rounded-lg shadow">
+    <div className="flex flex-col space-y-4 p-4 bg-gray-50 rounded-lg shadow sm:p-6 md:p-8 lg:space-y-6">
       {loading && <Loading />}
 
       <AddTask

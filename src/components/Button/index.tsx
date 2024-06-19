@@ -2,6 +2,7 @@ interface IButton {
   label: string;
   disabled?: boolean;
   onClick: () => void;
+  className?: string;
 }
 
 export default function Button({ label, disabled, onClick }: IButton) {
