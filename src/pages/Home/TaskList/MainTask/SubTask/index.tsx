@@ -33,8 +33,8 @@ function SubTask(
       {subTasks
         .filter((subTaskGroup) => subTaskGroup.mainTaskId === task.id)
         .flatMap((subTaskGroup) => subTaskGroup.subTasks)
-        .map((subTask: ISubTask) => (
-          <div key={`${task.id}-${subTask.id}`} className="flex items-center justify-between p-3 bg-white rounded shadow my-2">
+        .map((subTask: ISubTask, index) => (
+          <div key={`${task.id}-${subTask.id || index}`} className="flex items-center justify-between p-3 bg-white rounded shadow my-2">
             <label className="flex-grow flex items-center">
               {editingSubTaskId === subTask.id ? (
                 <input
