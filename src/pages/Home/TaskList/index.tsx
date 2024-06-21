@@ -74,25 +74,43 @@ function TaskList() {
     fetchSubTasks();
   }, [mainTasks]);
 
-  const handleSubTaskChange = (mainTaskId: number, subTaskId: number) => {
-    const updatedSubTasks = subTasks.map(group =>
-      group.mainTaskId === mainTaskId
-        ? {
-          ...group,
-          subTasks: group.subTasks.map(subTask =>
-            subTask.id === subTaskId
-              ? {
-                ...subTask,
-                finished: !subTask.finished
-              }
-              : subTask
-          ),
+  const handleSubTaskChange = async (mainTaskId: number, subTaskId: number) => {
+    const subTaskGroup = subTasks.find(group => group.mainTaskId === mainTaskId);
+    if (subTaskGroup) {
+      const subTask = subTaskGroup.subTasks.find(st => st.id === subTaskId);
+      if (subTask) {
+        try {
+          setLoading(true);
+          const updatedFinishedStatus = !subTask.finished;
+          const response = await api('put', `/SubTask/${subTaskId}`, {
+            ...subTask,
+            finished: updatedFinishedStatus
+          });
+          if (response.status >= 200 && response.status < 300) {
+            const updatedSubTasks = subTasks.map(group =>
+              group.mainTaskId === mainTaskId
+                ? {
+                  ...group,
+                  subTasks: group.subTasks.map(st =>
+                    st.id === subTaskId
+                      ? { ...st, finished: updatedFinishedStatus }
+                      : st
+                  )
+                }
+                : group
+            );
+            setSubTasks(updatedSubTasks);
+            saveToLocalStorage('subTasks', updatedSubTasks);
+          } else {
+            console.error('Failed to update subtask status');
+          }
+        } catch (error) {
+          console.error('Error updating subtask:', error);
+        } finally {
+          setLoading(false);
         }
-        : group
-    );
-
-    setSubTasks(updatedSubTasks);
-    saveToLocalStorage('subTasks', updatedSubTasks);
+      }
+    }
   };
 
   const handleCreateMainTask = async () => {
@@ -225,6 +243,7 @@ function TaskList() {
 
   const handleDeleteSubTask = async (mainTaskId: number, subTaskId: number) => {
     try {
+      console.log(subTaskId)
       setLoading(true);
       await api('delete', `/SubTask/${subTaskId}`);
       const updatedSubTasks = subTasks.map(group =>
