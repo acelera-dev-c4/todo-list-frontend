@@ -5,7 +5,8 @@ import {
 import {
   Login,
   Home,
-  PrivateRoute
+  PrivateRoute,
+  NotFound
 } from '../pages';
 
 export default function Routes() {
@@ -15,6 +16,7 @@ export default function Routes() {
       <Route path="/home" element={<PrivateRoute />}>
         <Route index element={<Home />} />
       </Route>
+      <Route path="*" element={<NotFound />} />
     </RoutesContainer>
   );
 }
