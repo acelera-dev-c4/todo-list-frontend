@@ -1,5 +1,3 @@
-import React, { useState } from "react"
-
 import { searchResultItem, taskDataProps } from '../../../../../types/search-types'
 import api from "../../../../../api"
 
@@ -13,8 +11,6 @@ function SearchResult({
     taskData: taskDataProps | null
 }) {
 
-    console.log("subTask", subTask)
-
     const handleCheckbox = async (itemId: number) => {
         console.log("itemId", itemId)
         try {
@@ -23,7 +19,7 @@ function SearchResult({
                 mainTaskIdTopic: itemId
             }, 'notification')
             console.log("response", response.data)
-        } catch(error) {
+        } catch (error) {
             console.error("error", error)
         }
     }
@@ -37,6 +33,7 @@ function SearchResult({
                 >
                     <div>{item.description} - {item.id}</div>
                     <input
+                        title="Checkbox"
                         className="cursor-pointer"
                         type="checkbox"
                         checked={taskData ? item.id === taskData.mainTaskIdTopic : false}
