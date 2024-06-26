@@ -19,7 +19,6 @@ const getUrl = (serviceType = 'default') => {
 const api = async (method, path, data = {}, serviceType = 'default') => {
   const token = getFromLocalStorage('authToken');
   const headers = {
-    // withCredentials: true,
     "Content-Type": "application/json",
     Accept: "application/json",
     Authorization: token ? `Bearer ${token}` : undefined,
