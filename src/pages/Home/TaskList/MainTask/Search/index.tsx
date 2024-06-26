@@ -36,8 +36,8 @@ function Search({
     }
   
     fetchUserTask();
-  }, [subTask]); // Adicionado subTask como dependência para refazer a requisição se o ID mudar
-  
+  }, [subTask]);
+
   if(loading) return <Loading />
 
   return (
