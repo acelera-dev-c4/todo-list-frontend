@@ -29,6 +29,6 @@ jobs:
         run: npm install
 
       - name: Generate
-        run: yarn run generate
+        run: npm run build
 
       - run: surge dist/ ${{ secrets.SURGE_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
