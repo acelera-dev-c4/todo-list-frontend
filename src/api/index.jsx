@@ -3,18 +3,28 @@ import { getFromLocalStorage } from '../helpers/localstorage';
 
 import envJson from '../env.json';
 
-export const baseURL = (window.location.hostname === 'localhost')
-  ? (envJson.development.base_path)
-  : (envJson.production.base_path)
+const getUrl = (customBase) => {
+  const environment = window.location.hostname.includes('localhost') ? 'development' : 'production'
+  const config = envJson[environment]
 
-const api = async (method, rota, data) => {
+  switch (customBase) {
+    case 'notification':
+      return config.notification_path
+    default:
+      return config.base_path
+  }
+}
+
+const api = async (method, rota, data, customBase) => {
   const token = getFromLocalStorage('authToken');
   const headers = {
     // withCredentials: true,
     "Content-Type": "application/json",
     Accept: "application/json",
-    Authorization: token ? `Bearer ${token}` : undefined,
+    Authorization: token ? `Bearer ${token}`  : undefined,
   };
+
+  const baseURL = getUrl(customBase)
 
   try {
     let response;
