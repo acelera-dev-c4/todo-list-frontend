@@ -18,21 +18,26 @@ function Search({
 
   useEffect(() => {
     async function fetchUserTask() {
+      if (!subTask) {
+        console.error("ID da subtask não fornecido.");
+        setLoading(false);
+        return;
+      }
+  
       try {
-        setLoading(true)
-        const response = await api('get', `/Subscription/SubTaskId?subtaskId=${subTask}`, '', 'notification')
-        console.log("Response", response)
-        setTaskData(response.data)
+        setLoading(true);
+        const response = await api('get', `/Subscription/SubTaskId?subtaskId=${subTask}`, '', 'notification');
+        setTaskData(response.data);
       } catch (error) {
-        console.error("Failed to fetch user task", error)
+        console.error("Failed to fetch user task", (error as any).response ? (error as any).response.data : error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
-
-    fetchUserTask()
-  }, [])
-
+  
+    fetchUserTask();
+  }, [subTask]);
+  
   if(loading) return <Loading />
 
   return (

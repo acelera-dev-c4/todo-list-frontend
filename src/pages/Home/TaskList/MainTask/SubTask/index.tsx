@@ -99,7 +99,7 @@ function SubTask(
                       e.stopPropagation();
                       startEditingSubTask(subTask);
                     }}
-                    className="bg-blue-500 text-white p-2 rounded mr-2 hover:bg-blue-600 cursor-pointer w-6 h-6"
+                    className="bg-blue-500 text-white p-1 rounded ml-2 hover:bg-blue-600 cursor-pointer w-6 h-6"
                     fontSize="medium"
                   />
                   <Delete
@@ -107,7 +107,7 @@ function SubTask(
                       e.stopPropagation();
                       handleDeleteSubTask(task.id, subTask.id);
                     }}
-                    className="bg-red-500 text-white p-2 rounded hover:bg-red-600 cursor-pointer w-6 h-6"
+                    className="bg-red-500 text-white p-1 rounded ml-2 hover:bg-red-600 cursor-pointer w-6 h-6"
                     fontSize="medium"
                   />
                   <PersonAddRounded

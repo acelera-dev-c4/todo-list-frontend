@@ -38,6 +38,7 @@ function SearchForm({
                     type="text"
                 />
                 <select
+                    title="Search Type"
                     className="border border-gray-300 rounded p-2 text-gray-700 text-sm"
                     value={searchType}
                     onChange={(e) => setSearchType(e.target.value)}
@@ -58,7 +59,7 @@ function SearchForm({
                     taskData={taskData}
                 />
             )}
-            {searchResult && searchResult.length == 0 && (
+            {searchResult && searchResult.length === 0 && (
                 <div className="p-2 text-sm">Nenhum resultado foi encontrado</div>
             )}
         </div>
