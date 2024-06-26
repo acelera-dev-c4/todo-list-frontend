@@ -31,4 +31,4 @@ jobs:
       - name: Generate
         run: npm run build
 
-      - run: surge dist/ ${{ secrets.SURGE_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
+      - run: surge build/ ${{ secrets.SURGE_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
