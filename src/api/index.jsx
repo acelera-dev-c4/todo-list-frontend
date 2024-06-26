@@ -1,52 +1,46 @@
 import axios from "axios";
 import { getFromLocalStorage } from '../helpers/localstorage';
+import Swal from 'sweetalert2';
 
 import envJson from '../env.json';
 
-const getUrl = (customBase) => {
+const getUrl = (serviceType = 'default') => {
   const environment = window.location.hostname.includes('localhost') ? 'development' : 'production'
   const config = envJson[environment]
 
-  switch (customBase) {
-    case 'notification':
-      return config.notification_path
-    default:
-      return config.base_path
-  }
+  const servicePaths = {
+    notification: config.notification_path,
+    default: config.base_path,
+  };
+
+  return servicePaths[serviceType] || servicePaths.default;
 }
 
-const api = async (method, rota, data, customBase) => {
+const api = async (method, path, data = {}, serviceType = 'default') => {
   const token = getFromLocalStorage('authToken');
   const headers = {
     // withCredentials: true,
     "Content-Type": "application/json",
     Accept: "application/json",
-    Authorization: token ? `Bearer ${token}`  : undefined,
+    Authorization: token ? `Bearer ${token}` : undefined,
   };
 
-  const baseURL = getUrl(customBase)
+  const baseURL = getUrl(serviceType)
 
   try {
-    let response;
-    switch (method) {
-      case "get":
-        response = await axios.get(`${baseURL}${rota}`, { headers });
-        break;
-      case "post":
-        response = await axios.post(`${baseURL}${rota}`, data, { headers });
-        break;
-      case "put":
-        response = await axios.put(`${baseURL}${rota}`, data, { headers });
-        break;
-      case "delete":
-        response = await axios.delete(`${baseURL}${rota}`, { headers });
-        break;
-      default:
-        throw new Error("Invalid method");
-    }
+    const url = `${baseURL}${path}`;
+    const options = { headers };
+
+    const response = await axios({ method, url, data, ...options });
+
     return response;
   } catch (error) {
-    console.log(error.response.data); /* TODO: Mudar o "console.log" para um Toast */
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: error.response?.data?.message || 'Algo deu errado!',
+    });
+
     throw error;
   }
 };
