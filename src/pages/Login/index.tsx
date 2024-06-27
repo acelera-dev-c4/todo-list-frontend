@@ -30,7 +30,7 @@ export default function Login() {
         <div className="w-full h-full bg-black bg-opacity-60 flex items-center justify-center p-5">
           {loading && <Loading />}
 
-          <div className="w-full max-w-xs mx-auto sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl flex flex-col items-center p-8 gap-5 shadow-xl bg-white bg-opacity-95 rounded-md">
+          <div className="w-full max-w-xs mx-auto sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl flex flex-col items-center p-8 gap-5 shadow-xl bg-white bg-opacity-95 rounded-md drop-shadow-md opacity-100 sm:opacity-80 hover:opacity-100 transition-opacity">
             <h1 className="text-2xl font-bold text-center">Login</h1>
 
             <form className="w-full flex flex-col gap-4 items-center">
