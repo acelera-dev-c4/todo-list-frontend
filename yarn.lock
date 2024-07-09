@@ -1758,10 +1758,10 @@
   "resolved" "https://registry.npmjs.org/@mui/core-downloads-tracker/-/core-downloads-tracker-5.15.19.tgz"
   "version" "5.15.19"
 
-"@mui/icons-material@^5.15.18":
-  "integrity" "sha512-RsEiRxA5azN9b8gI7JRqekkgvxQUlitoBOtZglflb8cUDyP12/cP4gRwhb44Ea1/zwwGGjAj66ZJpGHhKfibNA=="
-  "resolved" "https://registry.npmjs.org/@mui/icons-material/-/icons-material-5.15.19.tgz"
-  "version" "5.15.19"
+"@mui/icons-material@^5.16.0":
+  "integrity" "sha512-6ISoOhkp9w5gD0PEW9JklrcbyARDkFWNTBdwXZ1Oy5IGlyu9B0zG0hnUIe4H17IaF1Vgj6C8VI+v4tkSdK0veg=="
+  "resolved" "https://registry.npmjs.org/@mui/icons-material/-/icons-material-5.16.0.tgz"
+  "version" "5.16.0"
   dependencies:
     "@babel/runtime" "^7.23.9"
 

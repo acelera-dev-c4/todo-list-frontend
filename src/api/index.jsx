@@ -16,7 +16,7 @@ const getUrl = (serviceType = 'default') => {
   return servicePaths[serviceType] || servicePaths.default;
 }
 
-const api = async (method, path, data = {}, serviceType = 'default') => {
+const api = async (method, path, data, serviceType = 'default') => {
   const token = getFromLocalStorage('authToken');
   const headers = {
     "Content-Type": "application/json",
@@ -34,10 +34,11 @@ const api = async (method, path, data = {}, serviceType = 'default') => {
 
     return response;
   } catch (error) {
+    console.log('error', error)
     Swal.fire({
       icon: 'error',
       title: 'Oops...',
-      text: error.response?.data?.message || 'Algo deu errado!',
+      text: error.message || 'Algo deu errado!',
     });
 
     throw error;

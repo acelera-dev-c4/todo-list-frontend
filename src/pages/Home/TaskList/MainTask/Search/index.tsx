@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import SearchForm from './SearchForm'
 import api from "../../../../../api"
 import Loading from "../../../../../components/Loading"
@@ -23,7 +23,7 @@ function Search({
         setLoading(false);
         return;
       }
-  
+
       try {
         setLoading(true);
         const response = await api('get', `/Subscription/SubTaskId?subtaskId=${subTask}`, '', 'notification');
@@ -34,11 +34,11 @@ function Search({
         setLoading(false);
       }
     }
-  
+
     fetchUserTask();
   }, [subTask]);
-  
-  if(loading) return <Loading />
+
+  if (loading) return <Loading />
 
   return (
     <>

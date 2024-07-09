@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { IMainTask } from '../../../../interfaces/TaskInterfaces';
 import { MainTaskProps } from './MainTaskProps';
 import SubTask from './SubTask';
