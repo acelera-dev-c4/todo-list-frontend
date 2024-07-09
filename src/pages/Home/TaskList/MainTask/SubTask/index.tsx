@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { IMainTask, ISubTask, ISubTaskGroup } from '../../../../../interfaces/TaskInterfaces';
 import { Save, Close, Edit, Delete, CheckBox, CheckBoxOutlineBlank, PersonAddRounded } from '@mui/icons-material';
 import Search from '../Search'

@@ -1,6 +1,6 @@
 import { useAuth } from "../../context/AuthContext";
 import Logo from '../../assets/acelera_dev.png';
-import { AccountCircle, ExitToApp } from '@mui/icons-material';
+import { AccountCircle, ExitToApp, NotificationAdd } from '@mui/icons-material';
 
 const Navbar = () => {
   const { userData, logout } = useAuth();
@@ -13,6 +13,7 @@ const Navbar = () => {
         </a>
       </div>
       <div className="flex items-center mr-8">
+        <NotificationAdd className="text-yellow-400 mr-4" />
         <AccountCircle className="text-green-400" />
         <span className="text-white top-0 right-0 p-4">{userData.name}</span>
         <button

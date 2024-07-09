@@ -12,7 +12,6 @@ function SearchResult({
 }) {
 
     const handleCheckbox = async (itemId: number) => {
-        console.log("itemId", itemId)
         try {
             const response = await api('post', '/Subscription', {
                 subTaskIdSubscriber: subTask,
@@ -23,7 +22,7 @@ function SearchResult({
             console.error("error", error)
         }
     }
-
+    console.log('taskData', taskData)
     return (
         <div className="bg-white flex flex-col gap-2 px-2">
             {searchResult.map((item: searchResultItem, index: number) => (
