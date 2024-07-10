@@ -38,7 +38,7 @@ const api = async (method, path, data, serviceType = 'default') => {
     Swal.fire({
       icon: 'error',
       title: 'Oops...',
-      text: error.message || 'Algo deu errado!',
+      text: (error.response.data.error || error.message) || 'Algo deu errado!',
     });
 
     throw error;

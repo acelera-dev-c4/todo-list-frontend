@@ -99,6 +99,14 @@ function TaskList() {
                 : group
             );
 
+            const allSubTasksCompleted = updatedSubTasks.find(group => group.mainTaskId === mainTaskId)?.subTasks.every(st => st.finished);
+            const updatedMainTasks = mainTasks.map(mt =>
+              mt.id === mainTaskId ? { ...mt, isCompleted: allSubTasksCompleted } : mt
+            );
+
+            setMainTasks(updatedMainTasks);
+            saveToLocalStorage('mainTasks', updatedMainTasks);
+
             setSubTasks(updatedSubTasks);
             saveToLocalStorage('subTasks', updatedSubTasks);
           } else {

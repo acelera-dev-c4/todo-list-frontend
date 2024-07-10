@@ -40,7 +40,8 @@ function MainTask({
       {mainTasks.map((task: IMainTask) => (
         <div
           key={task.id}
-          className={`bg-white p-4 rounded-lg shadow-md hover:bg-gray-100 ${selectedMainTaskId === task.id ? 'bg-gray-200' : ''}`}
+          className={`bg-white p-4 rounded-lg shadow-md hover:bg-gray-100 ${task.isCompleted ? 'bg-green-200 hover:bg-green-300' : selectedMainTaskId === task.id ? 'bg-gray-200' : ''}`}
+          // className={`bg-white p-4 rounded-lg shadow-md hover:bg-gray-100 ${selectedMainTaskId === task.id ? 'bg-gray-200' : ''}`}
         >
           <div className="flex items-center justify-between">
             <label

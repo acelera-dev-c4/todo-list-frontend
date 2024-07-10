@@ -2,6 +2,7 @@ export interface IMainTask {
   id: number;
   userId: number;
   description: string;
+  isCompleted?: boolean;
 }
 
 export interface ISubTask {
