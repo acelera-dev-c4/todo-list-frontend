@@ -82,8 +82,7 @@ function TaskList() {
         try {
           setLoading(true);
           const updatedFinishedStatus = !subTask.finished;
-          const response = await api('put', `/SubTask/${subTaskId}`, {
-            ...subTask,
+          const response = await api('put', `/Subtask/finished/${subTaskId}`, {
             finished: updatedFinishedStatus
           });
           if (response.status >= 200 && response.status < 300) {
@@ -99,6 +98,7 @@ function TaskList() {
                 }
                 : group
             );
+
             setSubTasks(updatedSubTasks);
             saveToLocalStorage('subTasks', updatedSubTasks);
           } else {
