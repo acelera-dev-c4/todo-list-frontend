@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from "../../context/AuthContext";
 import Logo from '../../assets/acelera_dev.png';
 import { AccountCircle, ExitToApp, NotificationAdd } from '@mui/icons-material';
-import { NotificationModal } from '../Modal';
+import NotificationModal from "../Modal";
 import api from '../../api';
 
 interface Notification {

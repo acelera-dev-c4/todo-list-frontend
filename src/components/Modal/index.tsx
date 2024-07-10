@@ -12,7 +12,7 @@ interface NotificationModalProps {
   onClose: () => void;
 }
 
-export const NotificationModal = ({ notifications, isOpen, onClose }: NotificationModalProps) => {
+const NotificationModal = ({ notifications, isOpen, onClose }: NotificationModalProps) => {
   if (!isOpen) return null;
 
   return (
@@ -39,3 +39,5 @@ export const NotificationModal = ({ notifications, isOpen, onClose }: Notificati
     </div>
   );
 };
+
+export default NotificationModal;
